@@ -1,3 +1,4 @@
+APP_NAME=api
 PYTHON_CMD=python
 POETRY_CMD=poetry
 CONTAINER_API=django
@@ -22,7 +23,7 @@ up_build:
 .PHONY: python_startapp
 python_startapp:
 	@echo "[make command] python"
-	docker-compose exec $(CONTAINER_API) $(PYTHON_CMD) $(MANAGE_FILE) startapp api
+	docker-compose exec $(CONTAINER_API) $(PYTHON_CMD) $(MANAGE_FILE) startapp $(APP_NAME)
 
 .PHONY: runserver
 runserver:
@@ -30,7 +31,7 @@ runserver:
 	docker-compose exec $(CONTAINER_API) $(PYTHON_CMD) $(MANAGE_FILE) runserver
 
 .PHONY: makemigrations
-make-migrations:
+make_migrations:
 	@echo "[make command] make migrations"
 	docker-compose exec $(CONTAINER_API) $(PYTHON_CMD) $(MANAGE_FILE) makemigrations
 
@@ -38,6 +39,11 @@ make-migrations:
 migrate:
 	@echo "[make command] migrate"
 	docker-compose exec $(CONTAINER_API) $(PYTHON_CMD) $(MANAGE_FILE) migrate
+
+.PHONY: create_super_user
+create_super_user:
+	@echo "[make command] create super user"
+	docker-compose exec $(CONTAINER_API) $(PYTHON_CMD) $(MANAGE_FILE) createsuperuser
 
 .PHONY: enter_postgresql
 enter_postgresql:
