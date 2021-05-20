@@ -7,10 +7,17 @@ DB_USER=django_db_user
 DB_NAME=django_db
 DB_API=postgres
 DB_CMD=psql
+POETRY_CMD=poetry
+DEPENDENCY=null
 
 up:
 	@echo "[make command] up containers"
 	docker-compose up
+
+.PHONY: python_startapp
+up_build:
+	@echo "[make command] up containers with building"
+	docker-compose up --build
 
 .PHONY: python_startapp
 python_startapp:
@@ -36,6 +43,11 @@ migrate:
 enter_postgresql:
 	@echo "[make command] enter postgresql container"
 	docker-compose exec $(DB_API) $(DB_CMD) --username=$(DB_USER) --dbname=$(DB_NAME)
+
+.PHONY: poetry_add
+poetry_add:
+	@echo "[make command] poetry add"
+	docker-compose exec $(CONTAINER_API) $(POETRY_CMD) add $(DEPENDENCY)
 
 .PHONY: prod_up
 prod_up:
