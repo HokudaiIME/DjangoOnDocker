@@ -8,52 +8,57 @@ DB_NAME=django_db
 DB_API=postgres
 DB_CMD=psql
 
+up:
+	@echo "[make command] up containers"
+	docker-compose up
+
+.PHONY: python_startapp
 python_startapp:
-	@echo "python"
+	@echo "[make command] python"
 	docker-compose exec $(CONTAINER_API) $(PYTHON_CMD) $(MANAGE_FILE) startapp api
 
 .PHONY: runserver
 runserver:
-	@echo "runserver"
+	@echo "[make command] runserver"
 	docker-compose exec $(CONTAINER_API) $(PYTHON_CMD) $(MANAGE_FILE) runserver
 
 .PHONY: makemigrations
 make-migrations:
-	@echo "make migrations"
+	@echo "[make command] make migrations"
 	docker-compose exec $(CONTAINER_API) $(PYTHON_CMD) $(MANAGE_FILE) makemigrations
 
 .PHONY: migrate
 migrate:
-	@echo "migrate"
+	@echo "[make command] migrate"
 	docker-compose exec $(CONTAINER_API) $(PYTHON_CMD) $(MANAGE_FILE) migrate
 
 .PHONY: enter_postgresql
 enter_postgresql:
-	@echo "enter postgresql container"
+	@echo "[make command] enter postgresql container"
 	docker-compose exec $(DB_API) $(DB_CMD) --username=$(DB_USER) --dbname=$(DB_NAME)
 
 .PHONY: prod_up
 prod_up:
-	@echo "production up"
+	@echo "[make command] production up"
 	docker-compose -f $(PROD_DOCKER_COMPOSE_FILE) up
 
 .PHONY: prod_up_build
 prod_up_build:
-	@echo "production up contain build"
+	@echo "[make command] production up contain build"
 	docker-compose -f $(PROD_DOCKER_COMPOSE_FILE) up --build
 
 .PHONY: prod_down
 prod_down:
-	@echo "production down"
+	@echo "[make command] production down"
 	docker-compose -f $(PROD_DOCKER_COMPOSE_FILE) down -v
 
 .PHONY: prod_migrate
 prod_migrate:
-	@echo "production migrate"
+	@echo "[make command] production migrate"
 	docker-compose -f $(PROD_DOCKER_COMPOSE_FILE) exec $(CONTAINER_API) $(PYTHON_CMD) $(MANAGE_FILE) migrate --noinput
 
 .PHONY: prod_collect_static
 prod_collect_static:
-	@echo "production collect static"
+	@echo "[make command] production collect static"
 	docker-compose -f $(PROD_DOCKER_COMPOSE_FILE) exec $(CONTAINER_API) $(PYTHON_CMD) $(MANAGE_FILE) collectstatic --noinput --clear
 
